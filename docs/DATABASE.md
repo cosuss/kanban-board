@@ -144,6 +144,7 @@ order by s.position, k.position;
 | 백엔드 접속 | `DATABASE_URL`(Supabase 대시보드의 Database 연결 문자열)로 직접 접속. 접속 역할은 RLS를 우회하는 서버 역할(예: `postgres`)이다 |
 | 연결 문자열 | `postgresql://...`를 그대로 붙이면 `postgresql+psycopg://`로 바꿔 쓴다 |
 | 풀 | 기본 5 + overflow 10. Supabase 무료 플랜의 세션 풀러 한도를 넘지 않게 작게 둔다 |
+| 풀 초과 | 풀 연결 수(`pool_size`+`max_overflow`)만큼만 동시에 세션을 받고, 초과분은 `DATABASE_POOL_TIMEOUT`초 기다린 뒤 503 `database busy, try again`을 돌려준다. |
 | 비밀 | 연결 문자열은 `.env`에만 두고 커밋하지 않는다 |
 
 ## 8. 자동 채움이 적용되는 컬럼

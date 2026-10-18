@@ -29,27 +29,27 @@ class _ReferenceMixin(BaseModel):
 class CardCreate(_ReferenceMixin):
     """Body for creating a card."""
 
-    title: str = Field(min_length=1)
-    body: str | None = None
-    stage: str | None = None
+    title: str = Field(min_length=1, max_length=255)
+    body: str | None = Field(default=None, max_length=10_000)
+    stage: str | None = Field(default=None, max_length=255)
     stage_id: int | None = None
-    assignee: str | None = None
+    assignee: str | None = Field(default=None, max_length=255)
     assignee_id: int | None = None
-    milestone: str | None = None
+    milestone: str | None = Field(default=None, max_length=255)
     milestone_id: int | None = None
-    issue_number: int | None = Field(default=None, ge=1)
+    issue_number: int | None = Field(default=None, ge=1, le=2**63 - 1)
 
 
 class CardUpdate(_ReferenceMixin):
     """Body for partially updating a card (null clears assignee/milestone)."""
 
-    title: str | None = Field(default=None, min_length=1)
-    body: str | None = None
-    stage: str | None = None
+    title: str | None = Field(default=None, min_length=1, max_length=255)
+    body: str | None = Field(default=None, max_length=10_000)
+    stage: str | None = Field(default=None, max_length=255)
     stage_id: int | None = None
-    assignee: str | None = None
+    assignee: str | None = Field(default=None, max_length=255)
     assignee_id: int | None = None
-    milestone: str | None = None
+    milestone: str | None = Field(default=None, max_length=255)
     milestone_id: int | None = None
 
     @model_validator(mode="after")
@@ -64,9 +64,9 @@ class CardUpdate(_ReferenceMixin):
 class CardMove(BaseModel):
     """Body for moving a card to another stage."""
 
-    stage: str | None = None
+    stage: str | None = Field(default=None, max_length=255)
     stage_id: int | None = None
-    position: int | None = Field(default=None, ge=1)
+    position: int | None = Field(default=None, ge=1, le=2**63 - 1)
 
     @model_validator(mode="after")
     def _exactly_one_target(self) -> Self:

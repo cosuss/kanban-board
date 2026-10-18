@@ -57,6 +57,7 @@
 ## 3. API 설계 (FastAPI, prefix `/api/v1`)
 
 공통: JSON. 오류는 `{"detail": "..."}`. 404(없음), 409(유일성 충돌·삭제 불가), 422(검증). 인증 없음(수업 전제: 로컬 배포, 소규모 팀).
+입력 한도(넘으면 422): 이름·제목·`github_login`·`author` 류 문자열 255자, `body`(카드·코멘트) 10,000자, URL(`repo_url`) 2,048자, `issue_number`·`position` 1 ~ 2^63-1.
 Swagger `/docs`, ReDoc `/redoc`, `/openapi.json`은 FastAPI 기본.
 
 | 메서드 | 경로 | 설명 |

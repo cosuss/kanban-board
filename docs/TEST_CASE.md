@@ -806,6 +806,16 @@
   - Request: `TEST_DATABASE_URL` 미설정이고 `DATABASE_URL`만 설정
   - Expected: 테스트는 `DATABASE_URL`을 쓰지 않고 기본 `postgresql+psycopg://localhost/kanban_test`만 사용한다. 개발 DB는 TRUNCATE되지 않는다. ("시작 거부"는 구현하지 않았다 — 다음 단계. 수동 확인)
 
+- [ ] **TC-B-155 제목 길이 한도**
+  - Endpoint: `POST /api/v1/boards/1/cards`
+  - Request: `title` 256자, 그리고 255자
+  - Expected: 256자는 `422`, 255자는 `201`. (이름·`github_login` 등 255자 한도도 같은 규칙)
+
+- [ ] **TC-B-156 본문·코멘트 길이 한도**
+  - Endpoint: `POST /api/v1/boards/1/cards`, `POST /api/v1/cards/{id}/comments`
+  - Request: `body` 10,001자, 그리고 10,000자
+  - Expected: 10,001자는 `422`, 10,000자는 `201`. (`repo_url` 2,048자, 정수 `issue_number`·`position`은 2^63-1 초과 시 `422`)
+
 ## 13. 문서 경로
 
 - [ ] **TC-B-154 Swagger, ReDoc, openapi.json 제공 (수동)**
@@ -872,6 +882,7 @@
 | 마이그레이션 멱등 | TC-B-147, TC-B-148, TC-B-149, TC-B-150 |
 | 문서 경로 | TC-B-154 |
 | 설정 | TC-B-151, TC-B-152, TC-B-153 |
+| 입력 한도 | TC-B-155, TC-B-156 |
 
 ### 14.3 리소스 × 동작 매트릭스
 

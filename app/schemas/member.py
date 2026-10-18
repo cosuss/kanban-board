@@ -6,16 +6,16 @@ from pydantic import BaseModel, ConfigDict, Field
 class MemberCreate(BaseModel):
     """Body for creating a member."""
 
-    github_login: str = Field(min_length=1)
-    name: str = Field(min_length=1)
+    github_login: str = Field(min_length=1, max_length=255)
+    name: str = Field(min_length=1, max_length=255)
     role: str | None = None
 
 
 class MemberUpdate(BaseModel):
     """Body for partially updating a member."""
 
-    github_login: str | None = Field(default=None, min_length=1)
-    name: str | None = Field(default=None, min_length=1)
+    github_login: str | None = Field(default=None, min_length=1, max_length=255)
+    name: str | None = Field(default=None, min_length=1, max_length=255)
     role: str | None = None
 
 

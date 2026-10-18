@@ -9,8 +9,8 @@ from pydantic import BaseModel, Field, model_validator
 class CommentCreate(BaseModel):
     """Body for creating a comment; the author is optional."""
 
-    body: str = Field(min_length=1)
-    author: str | None = None
+    body: str = Field(min_length=1, max_length=10_000)
+    author: str | None = Field(default=None, max_length=255)
     author_id: int | None = None
 
     @model_validator(mode="after")

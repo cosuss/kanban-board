@@ -82,10 +82,11 @@ skills/kanban-log/     # Codex 스킬 원본 (CODEX.md)
 | `DATABASE_POOL_SIZE` | 5 | SQLAlchemy 풀 크기 |
 | `DATABASE_MAX_OVERFLOW` | 10 | 풀 초과 허용 연결 수 |
 | `DATABASE_POOL_TIMEOUT` | 30 | 풀 대기 시간(초) |
+| `DATABASE_POOL_PRE_PING` | true | 풀에서 꺼낼 때 `select 1`로 연결 생존 확인 |
 | `KANBAN_API_URL` | `http://127.0.0.1:8000` | CLI가 호출할 서버 주소 |
 | `KANBAN_BOARD` | `1` | CLI의 기본 보드 id |
 
-풀 크기는 Supabase 무료 플랜 세션 풀러의 동시 연결 한도를 넘지 않도록 작게 둔다.
+풀 크기는 Supabase 무료 플랜 세션 풀러의 동시 연결 한도를 넘지 않도록 작게 둔다. 풀 연결 수(`pool_size`+`max_overflow`)만큼만 동시에 세션을 받고, 초과분은 `DATABASE_POOL_TIMEOUT`초 기다린 뒤 503 `database busy, try again`을 돌려준다.
 
 URL 정규화 의사코드:
 
@@ -200,6 +201,8 @@ def normalize(url):
 | 409 | 유일성 충돌, 삭제 불가 | `a card with this issue_number already exists`, `stage 1 still has 2 card(s); move or delete them first` |
 | 422 | 검증 실패 | (아래 설명) |
 | 503 | `/health`의 DB 연결 실패 | `database unavailable` |
+
+입력 한도: 문자열 `title`·`name`·`github_login`·`author`·`stage`·`assignee`·`milestone`은 최대 255자, `body`(카드·코멘트)는 최대 10,000자, `repo_url`은 최대 2,048자이며 넘으면 422. `issue_number`·`position`은 1 이상 2^63-1 이하.
 
 422는 두 종류다. (1) Pydantic 검증(필수 누락, 타입 오류, 범위 밖 값, 이름·id 동시 지정 등)은 FastAPI 기본 형식 `{"detail": [{"type": "...", "loc": [...], "msg": "...", "input": ...}]}`다. 이름·id 동시 지정의 `msg`는 `Value error, give either stage or stage_id, not both`, 이동 대상 오류는 `Value error, give exactly one of stage or stage_id`다. (2) 서비스가 직접 던지는 오류(예: `board has no stages; create a stage first`)는 문자열 `detail`이다. 404·409도 문자열 `detail`이다. 테스트는 메시지 문구보다 상태 코드와 `detail` 존재 여부를 확인한다. CLI는 목록형 `detail`의 첫 항목만 `Error: github_login: String should have at least 1 character (422)` 꼴로 보여 준다.
 
@@ -366,8 +369,8 @@ GET /api/v1/boards/1/cards?stage=In%20Progress&assignee=codex&limit=20
 
 | 필드 | 필수 | 설명 |
 |---|---|---|
-| `title` | O | 빈 문자열 불가 |
-| `body` | | 본문 |
+| `title` | O | 빈 문자열 불가, 최대 255자 |
+| `body` | | 본문, 최대 10,000자 |
 | `stage` / `stage_id` | | 둘 중 하나. 없으면 보드의 첫 단계 |
 | `assignee` / `assignee_id` | | 둘 중 하나. 없으면 담당자 없음 |
 | `milestone` / `milestone_id` | | 둘 중 하나. 없으면 마일스톤 없음 |

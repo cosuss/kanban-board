@@ -278,3 +278,15 @@ def test_pagination(api: Api, board: dict) -> None:
     assert api.get(path, params={"limit": 201}).status_code == 422
     assert api.get(path, params={"offset": -1}).status_code == 422
     assert api.get("/boards/999/cards").status_code == 404
+
+
+def test_card_title_length_limit(api: Api, board: dict) -> None:
+    path = f"/boards/{board['id']}/cards"
+    assert api.post(path, {"title": "t" * 256}).status_code == 422
+    assert api.post(path, {"title": "t" * 255}).status_code == 201
+
+
+def test_card_body_length_limit(api: Api, board: dict) -> None:
+    path = f"/boards/{board['id']}/cards"
+    assert api.post(path, {"title": "t", "body": "b" * 10_001}).status_code == 422
+    assert api.post(path, {"title": "t", "body": "b" * 10_000}).status_code == 201

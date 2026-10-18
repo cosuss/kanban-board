@@ -8,14 +8,14 @@ from pydantic import BaseModel, ConfigDict, Field
 class MilestoneCreate(BaseModel):
     """Body for creating a milestone."""
 
-    title: str = Field(min_length=1)
+    title: str = Field(min_length=1, max_length=255)
     due_on: date | None = None
 
 
 class MilestoneUpdate(BaseModel):
     """Body for partially updating a milestone."""
 
-    title: str | None = Field(default=None, min_length=1)
+    title: str | None = Field(default=None, min_length=1, max_length=255)
     due_on: date | None = None
 
 

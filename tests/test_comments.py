@@ -62,3 +62,10 @@ def test_deleting_author_keeps_comment(api: Api, board: dict) -> None:
         None,
         None,
     )
+
+
+def test_comment_body_length_limit(api: Api, board: dict) -> None:
+    """Comment bodies over 10,000 characters are rejected; 10,000 is accepted."""
+    path = f"/cards/{_card(api, board)}/comments"
+    assert api.post(path, {"body": "b" * 10_001}).status_code == 422
+    assert api.post(path, {"body": "b" * 10_000}).status_code == 201

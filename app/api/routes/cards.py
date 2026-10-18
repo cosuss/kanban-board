@@ -20,7 +20,7 @@ def list_cards(
     milestone: str | None = None,
     q: str | None = None,
     limit: Annotated[int, Query(ge=1, le=200)] = 50,
-    offset: Annotated[int, Query(ge=0)] = 0,
+    offset: Annotated[int, Query(ge=0, le=2**63 - 1)] = 0,
 ) -> list[CardOut]:
     """List a board's cards; filter by stage, assignee, milestone, or text (q)."""
     found = cards.list_cards(
