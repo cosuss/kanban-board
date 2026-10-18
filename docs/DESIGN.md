@@ -113,6 +113,7 @@ Swagger `/docs`, ReDoc `/redoc`, `/openapi.json`은 FastAPI 기본.
 | DATABASE_URL | `postgresql+psycopg://localhost/kanban` | 서버·alembic. `postgresql://`로 시작하면 `postgresql+psycopg://`로 바꿔 쓴다(Supabase 연결 문자열 그대로 붙이기 위함). |
 | TEST_DATABASE_URL | `postgresql+psycopg://localhost/kanban_test` | pytest. 테스트마다 6개 테이블 TRUNCATE ... RESTART IDENTITY CASCADE. |
 | DATABASE_POOL_SIZE / DATABASE_MAX_OVERFLOW / DATABASE_POOL_TIMEOUT | 5 / 10 / 30 | SQLAlchemy 풀. Supabase 무료 플랜 세션 풀러 한도를 넘지 않게 작게 둔다. |
+| DATABASE_POOL_PRE_PING | true | 풀에서 꺼낼 때 `select 1`로 연결 생존 확인. 풀 크기만큼만 동시에 DB 요청을 받고, 그 이상은 `DATABASE_POOL_TIMEOUT`초까지 기다린 뒤 503 `database busy`(부하 테스트로 확인한 교착 방지, `docs/PERFORMANCE_AUDIT.md` §2). |
 | KANBAN_API_URL, KANBAN_BOARD | 위 CLI 절 | |
 
 `.env`는 커밋하지 않는다. `.env.example`만 둔다.
