@@ -83,6 +83,23 @@ ignore = [
 # FastAPI query parameters are spelled out as function arguments.
 "app/api/routes/cards.py" = ["too-many-arguments", "too-many-positional-arguments"]
 "app/services/cards.py" = ["too-many-arguments"]
+# The E2E test starts the CLI and a server as subprocesses of fixed commands.
+"tests/test_cli_e2e.py" = [
+    "suspicious-subprocess-import",
+    "subprocess-without-shell-equals-true",
+    "docstring-missing-yields",
+    "too-many-locals",
+]
+# CLI commands list every option as a function argument (Typer reads them), pass
+# any JSON value through, and import uvicorn/alembic only in the commands that
+# need them so that ordinary commands start fast.
+"app/cli/**/*.py" = [
+    "too-many-arguments",
+    "too-many-positional-arguments",
+    "any-type",
+    "import-outside-top-level",
+    "blind-except",
+]
 # Alembic's versions directory is not a package.
 "alembic/**/*.py" = ["implicit-namespace-package"]
 

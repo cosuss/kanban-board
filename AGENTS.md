@@ -23,6 +23,8 @@
 - Routes stay thin: parse the request, call a service, return a schema. Services raise `NotFoundError` (404), `ConflictError` (409), or `InvalidRequestError` (422) from `app/core/errors.py`.
 - Never commit `.env` or any connection string with a password.
 - Bind the unauthenticated local development server to `127.0.0.1` by default.
+- The `kanban` CLI (`app/cli/`, entry point `app.cli:app`) is only an HTTP client of the API; it never touches the database except `serve` and `db upgrade`. Every API endpoint needs a matching command, and any new endpoint or option must get a CLI command/option and a test in `tests/test_cli.py` in the same change.
+- CLI help text is plain English for non-developers (no "HTTP", "endpoint", "payload", "enum", "pagination"). Requests go through `app.cli.client.request`, so tests swap `get_client` instead of starting a server.
 
 ## Agent development loop
 
