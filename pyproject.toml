@@ -1,0 +1,102 @@
+[project]
+name = "kanban-board"
+version = "0.1.0"
+description = "팀 공유 간반 보드 백엔드 (FastAPI + PostgreSQL) 와 CLI"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "alembic>=1.13",
+    "fastapi>=0.115",
+    "httpx>=0.27",
+    "pydantic-settings>=2.5",
+    "psycopg[binary]>=3.2",
+    "rich>=13",
+    "sqlalchemy>=2.0",
+    "typer>=0.12",
+    "uvicorn[standard]>=0.30",
+]
+
+[project.scripts]
+kanban = "app.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "ruff==0.16.8",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.lint]
+# Enable every stable and preview rule. The tool version is pinned in the
+# development dependencies and uv.lock so rule changes arrive deliberately.
+select = ["ALL"]
+preview = true
+
+# These rules conflict with or duplicate Ruff's formatter behavior.
+ignore = [
+    # This repository has no copyright/license metadata to use for headers.
+    "missing-copyright-notice",
+    "tab-indentation",
+    "indentation-with-invalid-multiple",
+    "indentation-with-invalid-multiple-comment",
+    "over-indented",
+    "incorrect-blank-line-before-class",
+    "docstring-tab-indentation",
+    "triple-single-quotes",
+    "bad-quotes-inline-string",
+    "bad-quotes-multiline-string",
+    "bad-quotes-docstring",
+    "avoidable-escaped-quote",
+    "unnecessary-escaped-quote",
+    "missing-trailing-comma",
+    "prohibited-trailing-comma",
+    "multi-line-summary-second-line",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Assertions are the core of test verification and are expected in tests.
+"tests/**/*.py" = [
+    "assert",
+    "ANN",
+    "D",
+    "magic-value-comparison",
+    "implicit-namespace-package",
+    "docstring-missing-returns",
+    # The cleanup fixture must run for every test, so autouse is the point.
+    "pytest-fixture-autouse",
+]
+# One-line route/service docstrings describe behavior; return types are annotated.
+"app/**/*.py" = [
+    "docstring-missing-returns",
+    "docstring-missing-yields",
+    "docstring-missing-exception",
+]
+# FastAPI query parameters are spelled out as function arguments.
+"app/api/routes/cards.py" = ["too-many-arguments", "too-many-positional-arguments"]
+"app/services/cards.py" = ["too-many-arguments"]
+# Alembic's versions directory is not a package.
+"alembic/**/*.py" = ["implicit-namespace-package"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+pythonpath = ["."]
+filterwarnings = [
+    # Starlette's TestClient prefers httpx2; httpx is still what the CLI uses.
+    "ignore:Using `httpx` with `starlette.testclient` is deprecated",
+]
+
+[tool.ruff.format]
+preview = true
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
