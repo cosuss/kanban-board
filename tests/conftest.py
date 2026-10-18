@@ -17,6 +17,10 @@ from app.main import app
 TEST_DATABASE_URL = normalize_database_url(
     os.environ.get("TEST_DATABASE_URL", "postgresql+psycopg://localhost/kanban_test")
 )
+if "test" not in TEST_DATABASE_URL.rsplit("/", 1)[-1]:
+    # The fixtures TRUNCATE every table, so refuse anything that is not a test DB.
+    msg = "TEST_DATABASE_URL must point at a database whose name contains 'test'"
+    raise RuntimeError(msg)
 TABLES = "comments, cards, milestones, stages, members, boards"
 
 

@@ -2,7 +2,7 @@
 
 import sys
 from collections.abc import Callable, Sequence
-from datetime import UTC, date, datetime
+from datetime import date, datetime
 from operator import itemgetter
 from typing import Any
 from urllib.parse import urlsplit
@@ -156,7 +156,7 @@ def say_deleted(ctx: typer.Context, message: str) -> None:
 
 
 def when(value: str | None) -> str:
-    """Shorten an ISO timestamp to ``YYYY-MM-DD HH:MM`` in UTC.
+    """Shorten an ISO timestamp to ``YYYY-MM-DD HH:MM`` in the local time zone.
 
     Returns:
         The short text, or ``-`` when there is no value.
@@ -164,7 +164,7 @@ def when(value: str | None) -> str:
     """
     if not value:
         return NO_VALUE
-    return datetime.fromisoformat(value).astimezone(UTC).strftime("%Y-%m-%d %H:%M")
+    return datetime.fromisoformat(value).astimezone().strftime("%Y-%m-%d %H:%M")
 
 
 def dash(value: object) -> str:

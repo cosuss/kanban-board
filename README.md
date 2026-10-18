@@ -140,3 +140,13 @@ app/
 alembic/             마이그레이션 0001_kanban_v3 (raw SQL, IF NOT EXISTS)
 tests/               pytest (실제 Postgres)
 ```
+
+## 문서
+
+- [docs/PRD.md](docs/PRD.md), [docs/TSD.md](docs/TSD.md), [docs/DATABASE.md](docs/DATABASE.md), [docs/TEST_CASE.md](docs/TEST_CASE.md): 백엔드 요구사항, API 계약, 스키마, 테스트 케이스
+- [docs/PRD_CLI.md](docs/PRD_CLI.md), [docs/TSD_CLI.md](docs/TSD_CLI.md), [docs/TEST_CASE_CLI.md](docs/TEST_CASE_CLI.md), [docs/CLI_GUIDE.md](docs/CLI_GUIDE.md): `kanban` CLI 요구사항, 설계, 테스트 케이스, 사용 안내
+- [docs/DESIGN.md](docs/DESIGN.md): 확정된 설계 결정
+- [docs/CODEX.md](docs/CODEX.md): Codex에서 CLI·API·스킬로 보드를 쓰는 법과 실제 데모 결과
+- [skills/kanban-log/SKILL.md](skills/kanban-log/SKILL.md): Codex가 작업을 보드에 자동 기록하는 `kanban-log` 스킬
+- [docs/SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md): 보안 점검 결과
+- [docs/PERFORMANCE_AUDIT.md](docs/PERFORMANCE_AUDIT.md): 성능 점검 결과
