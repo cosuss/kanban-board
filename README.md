@@ -2,6 +2,33 @@
 
 팀이 함께 쓰는 간반 보드의 백엔드 API입니다. FastAPI + SQLAlchemy + PostgreSQL로 만들었고, 과제#5에서 설계한 보드 DB(테이블 6개)를 그대로 사용합니다. Python 3.11과 `uv`로 실행합니다. 설계 결정은 [docs/DESIGN.md](docs/DESIGN.md)에 있습니다.
 
+## 과제#8 프론트엔드 담당자·AI 시작점
+
+**먼저 [docs/HANDOFF.md](docs/HANDOFF.md)를 읽으세요.** 실행 순서, API 예시,
+프론트 환경변수, QA 기준, AI에 전달할 프롬프트가 있습니다.
+
+- 실제 API 명세: [docs/openapi.json](docs/openapi.json) (서버 없이도 읽을 수 있음)
+- 준비물: Python 3.11 + uv + PostgreSQL, 또는 Docker Compose
+- 원본 과제#5 폴더 없이 예제 준비: 서버 실행 후 `uv run python -m app.demo`
+- 프론트: 별도 저장소에서 개발. 브라우저 → HTTP API → PostgreSQL 구조.
+- 기본 CORS: `http://localhost:3000`, `http://127.0.0.1:3000`
+- 공개된 것은 소스와 명세입니다. 실행 중인 공용 API나 DB 비밀번호는 포함되지 않습니다.
+
+### Docker로 로컬 DB와 API 실행
+
+Docker Desktop 또는 Docker Engine + Compose가 실행된 환경에서:
+
+```sh
+git clone https://github.com/cosuss/kanban-board.git
+cd kanban-board
+docker compose up --build -d --wait
+docker compose exec api uv run --locked --no-dev python -m app.demo
+```
+
+출력된 보드 ID를 프론트에 사용하세요. Swagger는 <http://127.0.0.1:8000/docs>.
+`docker compose down`으로 종료하며 데이터는 볼륨에 남습니다.
+자세한 네이티브 실행·공유 DB 연결·문제 해결은 [인수인계 문서](docs/HANDOFF.md)를 따릅니다.
+
 ## 시작하기
 
 ### 준비
@@ -26,7 +53,9 @@ uv run alembic upgrade head
 
 마이그레이션(`alembic/versions/0001_kanban_v3.py`)은 `create table if not exists`, `create index if not exists`, `create or replace view`로 되어 있어서 **여러 번 실행해도 안전하고, 이미 테이블이 있는 DB에서는 건너뜁니다.**
 
-실제 GitHub 데이터 시드(보드 1개, 팀원 4명, 카드 27장 등 47행)는 이 저장소에 복사하지 않았습니다. 필요하면 과제#5 폴더의 SQL을 적용합니다.
+팀원에게는 API 실행 후 `uv run python -m app.demo`로 예제 보드를 준비하는 경로를 권장합니다. 다른 프로젝트는 필요 없습니다.
+
+아래는 원본 과제#5 폴더를 가진 작성자만 사용하는 선택 절차입니다. 실제 GitHub 데이터 시드는 이 저장소에 복사하지 않았습니다.
 
 ```sh
 psql -d kanban -f ../../side-projects/kanban-db/sql/002_seed.sql

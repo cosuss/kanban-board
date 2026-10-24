@@ -123,3 +123,14 @@ Swagger `/docs`, ReDoc `/redoc`, `/openapi.json`은 FastAPI 기본.
 
 `docs/PRD.md`, `TSD.md`, `DATABASE.md`, `TEST_CASE.md`(백엔드), `PRD_CLI.md`, `TSD_CLI.md`, `TEST_CASE_CLI.md`, `CLI_GUIDE.md`,
 `SECURITY_AUDIT.md`, `PERFORMANCE_AUDIT.md`(부하 테스트 결과 포함), `CODEX.md`(Codex에서 CLI/API/스킬 쓰는 법). 모두 한국어, 레퍼런스 저장소 톤.
+
+## 8. 과제#8 프론트엔드 인수인계 (2026-10-24)
+
+- 프론트 구현 시작점은 `docs/HANDOFF.md`, API 계약은 `docs/openapi.json`이다.
+- CORS는 `CORS_ORIGINS` JSON 배열로 설정한다. 기본 허용 주소는 localhost와
+  127.0.0.1의 3000번 포트이며 자격 증명은 허용하지 않는다.
+- 원본 과제#5 시드를 복사하지 않고 `python -m app.demo`로 별도 예제 보드를 준비한다.
+  같은 명령은 기존 예제 보드와 항목을 재사용하며 사용자 데이터를 삭제하지 않는다.
+- Docker Compose는 격리된 로컬 Postgres와 API를 제공한다. DB 포트는 공개하지 않고
+  API는 호스트의 127.0.0.1에만 노출한다. 컨테이너 내부에서는 0.0.0.0으로 수신한다.
+- 공유 DB 접속 정보는 서버 환경에만 보관한다. 프론트엔드는 HTTP API만 호출한다.

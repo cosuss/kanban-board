@@ -1,10 +1,12 @@
 """FastAPI application."""
 
 from fastapi import APIRouter, FastAPI, Request, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import DataError
 
 from app.api.routes import boards, cards, comments, health, members, milestones, stages
+from app.core.config import get_settings
 from app.core.errors import register_error_handlers
 
 API_PREFIX = "/api/v1"
@@ -23,6 +25,13 @@ def _data_error(_request: Request, _exc: Exception) -> JSONResponse:
 
 
 app = FastAPI(title="Kanban Board API", version="0.1.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=get_settings().cors_origins,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type"],
+)
 register_error_handlers(app)
 app.add_exception_handler(DataError, _data_error)
 app.include_router(api)

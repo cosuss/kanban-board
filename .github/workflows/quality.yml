@@ -46,3 +46,49 @@ jobs:
 
       - name: Run the shared quality gate
         run: ./scripts/check.sh
+
+  docker-handoff:
+    name: Docker teammate quickstart
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build and start a fresh database and API
+        run: docker compose up --build -d --wait --wait-timeout 180
+      - name: Prepare examples twice and check browser integration
+        run: |
+          docker compose exec -T api uv run --locked --no-dev python -m app.demo
+          docker compose exec -T api uv run --locked --no-dev python -m app.demo
+          python3 - <<'PYTHON'
+          import json
+          import urllib.request
+
+          base = "http://127.0.0.1:8000"
+          def read(path):
+              with urllib.request.urlopen(base + path) as response:
+                  return json.load(response)
+
+          assert read("/health")["database"] == "ok"
+          boards = read("/api/v1/boards")
+          assert len(boards) == 1
+          view = read(f"/api/v1/boards/{boards[0]['id']}/view")
+          assert sum(len(s["cards"]) for s in view["stages"]) == 3
+          request = urllib.request.Request(
+              base + "/api/v1/boards", method="OPTIONS", headers={
+                  "Origin": "http://localhost:3000",
+                  "Access-Control-Request-Method": "POST",
+                  "Access-Control-Request-Headers": "content-type",
+              },
+          )
+          with urllib.request.urlopen(request) as response:
+              assert response.headers["Access-Control-Allow-Origin"] == "http://localhost:3000"
+          assert read("/openapi.json") == json.load(open("docs/openapi.json"))
+          print("Docker quickstart, idempotent examples, CORS and OpenAPI: passed")
+          PYTHON
+      - name: Container logs on failure
+        if: failure()
+        run: docker compose logs --tail=100
+      - name: Stop containers
+        if: always()
+        run: docker compose down -v

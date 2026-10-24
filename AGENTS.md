@@ -33,3 +33,10 @@
 3. Run the narrow relevant test while iterating, then run `./scripts/check.sh` before handoff. If a check fails, use its output to fix the code and rerun the gate; do not weaken a rule or delete a failing assertion just to get a green result.
 4. Inspect the final diff for unintended changes and update the docs when behavior or design changes.
 5. Report what changed and the exact checks run. Never claim a check passed if it was not run.
+
+## Frontend handoff
+
+When implementing a frontend, connecting a browser, or setting up a teammate checkout,
+read `docs/HANDOFF.md` first. Use `docs/openapi.json` as the API contract; verify its
+snapshot against `app.openapi()` after route/schema changes. Keep frontend code in
+a separate sibling repository. Use the printed demo board ID rather than assuming 1.
