@@ -563,7 +563,7 @@ def create_board(session, name, repo_url, with_default_stages=True):
 | 범위 | `TEST_CASE.md`의 모든 케이스 + 마이그레이션 멱등성 + 풀 설정 단위 테스트 |
 | CLI | `TSD_CLI.md`·`TEST_CASE_CLI.md` 참조. 단위는 ASGITransport, E2E는 uvicorn 서브프로세스 |
 
-실행: `uv run pytest`. 테스트는 `DATABASE_URL`이 아니라 `TEST_DATABASE_URL`(없으면 기본값 `postgresql+psycopg://localhost/kanban_test`)만 사용하므로 개발·운영 DB에 TRUNCATE가 가지 않는다. `TEST_DATABASE_URL`을 운영 DB로 지정하지 않도록 주의한다. 현재 테스트는 83개다(API 47, CLI 33 — 단위 31 + E2E 2, 마이그레이션 3).
+실행: `uv run pytest`. 테스트는 `DATABASE_URL`이 아니라 `TEST_DATABASE_URL`(없으면 기본값 `postgresql+psycopg://localhost/kanban_test`)만 사용하므로 개발·운영 DB에 TRUNCATE가 가지 않는다. `TEST_DATABASE_URL`을 운영 DB로 지정하지 않도록 주의한다. 테스트 수와 인수인계 검증 결과는 `docs/HANDOFF_VALIDATION.md` 및 최신 CI 실행을 참조한다.
 
 ## 10. 품질 게이트
 

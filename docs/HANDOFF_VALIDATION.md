@@ -20,8 +20,10 @@
 2. 새 Docker 이미지·DB에서 Compose 시작 → 예제 준비 2회 → 중복 없는 데이터·
    health·브라우저 CORS·OpenAPI 일치 확인 → 컨테이너 종료.
 
-Docker 경로의 첫 CI 결과는 공개 전 확인한다. 로컬 Mac에서는 Docker 엔진이 꺼져 있어
-컨테이너를 실행하지 않았고, 네이티브 경로를 실제 HTTP로 검증했다.
+[GitHub 검증 실행 #40090531408](https://github.com/cosuss/kanban-board/actions/runs/40090531408)에서
+Docker quickstart와 전체 품질 검사 단계가 통과했다. Docker 경로는 Linux의 새 환경에서
+실제 빌드·실행으로 확인했다. 로컬 Mac에서는 Docker 엔진이 꺼져 있어 컨테이너를
+실행하지 않았고, 네이티브 경로를 실제 HTTP로 검증했다.
 
 ## 팀원 환경에서 필요한 것
 
